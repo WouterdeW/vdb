@@ -6,11 +6,15 @@ authors = [
     {name = "Wouter de Wilde",email = "wouter.dewilde@eneco.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.10,<3.13"
 dependencies = [
     "httpx (>=0.28.1,<0.29.0)",
     "pydantic (>=2.10.6,<3.0.0)",
-    "psycopg (>=3.2.4,<4.0.0)"
+    "psycopg[binary] (>=3.2.4,<4.0.0)",
+    "dagster (>=1.10.1,<2.0.0)",
+    "dagster-postgres (>=0.26.1,<0.27.0)",
+    "dagster-docker (>=0.26.1,<0.27.0)",
+    "dagster-webserver (>=1.10.1,<2.0.0)"
 ]
 
 

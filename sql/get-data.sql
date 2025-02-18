@@ -1,0 +1,1 @@
+SELECT * FROM vdb.knmi_edr_ten_minutes limit 25;

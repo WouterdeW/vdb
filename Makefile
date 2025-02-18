@@ -2,8 +2,8 @@ SHELL = /bin/bash
 
 all: up init-db init-schema
 
-#build:
-#	docker build -t assignment-software-engineering-wouter:latest .
+build:
+	docker build -t vandebron-wouter:latest .
 
 up: ## Starts docker-compose setup
 	docker-compose up -d
@@ -20,3 +20,9 @@ init-db: up ## Initialize database
 
 init-schema: up init-db
 	docker-compose exec -T db psql --dbname=vdb --username=vdb -f /tmp/sql/init-schema.sql
+
+get-data:
+	docker-compose exec -T db psql -d vdb -U vdb -f /tmp/sql/get-data.sql
+
+get-aggregated-data:
+	docker-compose exec -T db psql -d vdb -U vdb -f /tmp/sql/get-aggregated-data.sql

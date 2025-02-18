@@ -3,12 +3,14 @@ import sys
 from datetime import datetime, timedelta
 
 import httpx
+import dagster as dg
 
-from vandebron.config import DatabaseConfig, EDRConfig
-from vandebron.model import EDRTenMinutes, Location
-from vandebron.repo import Repository
+from config import DatabaseConfig, EDRConfig
+from model import EDRTenMinutes, Location
+from repo import Repository
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO, stream=sys.stdout)
+logger = logging.getLogger("vdb")
 
 # These could be replaced by a config / env vars.
 FLOAT_PARAMS = ['dd_10', 'ff_10m_10', 'fx_10m_10', 'p_nap_msl_10', 'tn_10cm_past_6h_10', 't_dryb_10', 'tn_dryb_10', 'tx_dryb_10']
@@ -46,7 +48,7 @@ def transform_data(raw_data: dict):
     if invalid_param_length:
         raise Exception(f"Invalid data received. Invalid amount of values for parameters: {invalid_param_length}")
 
-    logging.info(f"Collected {length_timestamps} rows, all parameters lengths are equal. Validating and transforming data...")
+    logger.info(f"Collected {length_timestamps} rows, all parameters lengths are equal. Validating and transforming data...")
     edr_ten_minutes_data = []
     for i in range(length_timestamps):
         validated_params = [parameters[param][i] if validate_float(param, parameters[param][i]) else None for param in FLOAT_PARAMS]
@@ -82,21 +84,27 @@ def validate_float(parameter_name: str, float_input: float) -> bool:
         _float_output = float(float_input)
         return True
     except ValueError:
-        logging.warning(f"Found a non-float value for parameter {parameter_name}. Skipping value {float_input}")
+        logger.warning(f"Found a non-float value for parameter {parameter_name}. Skipping value {float_input}")
         return False
 
 
 def ingest_data(location: Location, edr_ten_minutes_data: list[EDRTenMinutes]):
-    logging.info("Ingesting data..")
+    logger.info("Ingesting data..")
     database_config = DatabaseConfig()
     repo = Repository(database_config)
     location_id = repo.upsert_location(location=location)
     edr_location_data = {'location_id': location_id}
     edr_data = [dict(edr_location_data, **edr.model_dump()) for edr in edr_ten_minutes_data]
     repo.ingest_edr_data(edr_data)
-    logging.info("Done!")
+    logger.info("Done!")
 
 
-data = get_data()
-location, edr = transform_data(data)
-ingest_data(location, edr)
+@dg.asset
+def run():
+    raw_data = get_data()
+    location, edr_ten_minutes_data = transform_data(raw_data)
+    ingest_data(location, edr_ten_minutes_data)
+
+
+defs = dg.Definitions(assets=[run])
+

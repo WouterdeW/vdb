@@ -49,7 +49,7 @@ WITH NO DATA;
 
 CREATE INDEX IF NOT EXISTS hourly_readings on vdb.knmi_edr_hourly (location_id, hour_bucket);
 
-SELECT add_continuous_aggregate_policy('vdb.knmi_edr_hourly',
+SELECT add_continuous_aggregate_policy('knmi_edr_hourly',
                                        start_offset => INTERVAL '1 month',
                                        end_offset => INTERVAL '12 h',
-                                       schedule_interval => INTERVAL '1 h');
+                                       schedule_interval => INTERVAL '10 m');

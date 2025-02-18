@@ -4,7 +4,7 @@ import sys
 import psycopg
 
 from config import DatabaseConfig
-from vandebron.model import Location
+from model import Location
 
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s', level=logging.INFO, stream=sys.stdout)
 
