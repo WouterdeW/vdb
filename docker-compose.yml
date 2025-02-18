@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: docker.io/timescale/timescaledb-ha:pg15-ts2.12-all
+    environment:
+      TIMESCALEDB_TELEMETRY: off
+      TS_TUNE_MEMORY: 500MB
+      TS_TUNE_NUM_CPUS: 1
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./sql:/tmp/sql:ro
+    healthcheck:
+      test: [ 'CMD-SHELL', 'pg_isready -U postgres' ]
+      start_period: 15s
+    mem_limit: 1g
+    networks:
+      - vdb
+
+volumes:
+  pg-data:
+    driver: local
+
+networks:
+  vdb:

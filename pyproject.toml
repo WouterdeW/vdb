@@ -1,0 +1,19 @@
+[project]
+name = "vandebron"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Wouter de Wilde",email = "wouter.dewilde@eneco.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "httpx (>=0.28.1,<0.29.0)",
+    "pydantic (>=2.10.6,<3.0.0)",
+    "psycopg (>=3.2.4,<4.0.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
