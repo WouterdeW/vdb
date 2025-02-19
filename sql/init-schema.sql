@@ -21,6 +21,7 @@ CREATE TABLE IF NOT EXISTS vdb.knmi_edr_ten_minutes(
 ,   t_dryb_10           FLOAT
 ,   tn_dryb_10          FLOAT
 ,   tx_dryb_10          FLOAT
+,   inserted_at         TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 ,   CONSTRAINT          fk_knmi_edr FOREIGN KEY (location_id) REFERENCES vdb.knmi_edr_locations(id)
 ,   CONSTRAINT          uq_knmi_edr_ten_minutes UNIQUE (timestamp, location_id)
 );

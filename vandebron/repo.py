@@ -14,12 +14,13 @@ class Repository:
         self._config = config
 
     def _connect(self):
-        return psycopg.connect(f'host={self._config.pg_host} '
-                               f'port={self._config.port} '
-                               f'dbname={self._config.db_name} '
-                               f'user={self._config.username} '
-                               f'password={self._config.password}'
-                               )
+        return psycopg.connect(
+            f'host={self._config.pg_host} '
+            f'port={self._config.port} '
+            f'dbname={self._config.db_name} '
+            f'user={self._config.username} '
+            f'password={self._config.password}'
+        )
 
     def upsert_location(self, location: Location) -> int:
         with self._connect() as conn:

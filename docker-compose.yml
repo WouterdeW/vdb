@@ -11,9 +11,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
     ports:
-      - 5435:5432
-    expose:
-      - 5435
+      - 5432:5432
     volumes:
       - pg-data:/var/lib/postgresql/data
       - ./sql:/tmp/sql:ro
@@ -50,7 +48,7 @@ services:
       DAGSTER_POSTGRES_PASSWORD: "postgres_password"
       DAGSTER_POSTGRES_DB: "postgres_db"
       DAGSTER_CURRENT_IMAGE: "vandebron-vandebron"
-      PGHOST: db
+      PGHOST: "db"
     networks:
       - vdb
 
