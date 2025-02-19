@@ -1,9 +1,6 @@
 FROM python:3.10-slim
 
-ARG YOUR_ENV
-
-ENV YOUR_ENV=${YOUR_ENV} \
-  PYTHONFAULTHANDLER=1 \
+ENV PYTHONFAULTHANDLER=1 \
   PYTHONUNBUFFERED=1 \
   PYTHONHASHSEED=random \
   PIP_NO_CACHE_DIR=off \
@@ -17,7 +14,7 @@ ENV YOUR_ENV=${YOUR_ENV} \
   POETRY_VERSION=2.0.1
 
 # System deps:
-RUN pip install poetry
+RUN pip install "poetry==$POETRY_VERSION"
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /opt/dagster/app
